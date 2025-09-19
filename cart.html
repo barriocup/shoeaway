@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Cart — ShoeAway</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-left"><a class="logo" href="index.html">ShoeAway</a></div>
+    <div class="nav-links">
+      <a href="shop.html">Shop</a>
+      <a href="cart.html">Cart (0)</a>
+      <a href="orders.html">My Orders</a>
+      <a href="account.html">Account</a>
+    </div>
+  </nav>
+
+  <!-- Cart -->
+  <main class="container">
+    <h2>Your Cart</h2>
+    <div id="cart-list" class="cart-list"></div>
+    <div class="cart-summary">
+      <strong>Total: <span id="cart-total">₱0</span></strong>
+      <button onclick="checkout()">Checkout</button>
+    </div>
+  </main>
+
+  <script>
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const list = document.getElementById('cart-list');
+      const totalEl = document.getElementById('cart-total');
+      list.innerHTML = '';
+      let total = 0;
+
+      if (cart.length === 0) {
+        list.innerHTML = "<p>Your cart is empty.</p>";
+        totalEl.textContent = "₱0";
+        updateCartCount();
+        return;
+      }
+
+      cart.forEach((item, index) => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <div class="thumb" style="background-image:url('${item.img}')"></div>
+          <div>
+            <h4>${item.name}</h4>
+            <p>${item.brand}</p>
+            <p>₱${item.price}</p>
+            <button onclick="removeFromCart(${index})">Remove</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+
+      totalEl.textContent = "₱" + total;
+      updateCartCount();
+    }
+
+    function removeFromCart(index) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      loadCart();
+    }
+
+    function checkout() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (cart.length === 0) {
+        alert("Cart is empty!");
+        return;
+      }
+
+      // Save to orders
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const order = {
+        id: Date.now(),
+        items: cart,
+        total: cart.reduce((sum, i) => sum + i.price, 0),
+        date: new Date().toLocaleString()
+      };
+      orders.push(order);
+      localStorage.setItem('orders', JSON.stringify(orders));
+
+      alert("Thank you for your purchase!");
+      localStorage.removeItem('cart');
+      loadCart();
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartLink = document.querySelector('.nav-links a[href="cart.html"]');
+      if (cartLink) {
+        cartLink.textContent = `Cart (${cart.length})`;
+      }
+    }
+
+    window.onload = loadCart;
+  </script>
+</body>
+</html>
