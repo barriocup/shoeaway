@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Login — ShoeAway</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="navbar">
+ <div class="nav-left"><a class="logo" href="index.html">ShoeAway</a></div>
+  <div class="nav-links">
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart</a>
+    <a href="orders.html">My Orders</a>
+    <a href="account.html">Account</a>
+  </div>
+</nav>
+  <main class="auth-container">
+    <div class="auth-card">
+      <h2>Login</h2>
+      <form id="login-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <br>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </main>
+  <script>
+    document.getElementById('login-form').onsubmit = function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password') ? document.getElementById('password').value : "";
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      const user = users.find(u => u.username === username && u.password === password);
+      if (!user) {
+        alert("Invalid credentials!");
+        return;
+      }
+      localStorage.setItem('user', JSON.stringify({ username }));
+      alert("Logged in!");
+      window.location = "shop.html";
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

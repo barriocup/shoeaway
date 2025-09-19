@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Shop — ShoeAway</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-left"><a class="logo" href="index.html">ShoeAway</a></div>
+    <div class="nav-links">
+      <a href="shop.html">Shop</a>
+      <a href="cart.html">Cart (0)</a>
+      <a href="orders.html">My Orders</a>
+      <a href="account.html">Account</a>
+    </div>
+  </nav>
+
+  <!-- Products -->
+  <main class="container">
+    <h2>Shop</h2>
+    <div class="products-grid" id="product-list"></div>
+  </main>
+
+  <script>
+    // Product list
+    const products = [
+      { id: 1, name: "Nike Air Max", brand: "Nike", price: 4999, img: "img/nike.jpg" },
+      { id: 2, name: "Adidas Ultraboost", brand: "Adidas", price: 5999, img: "img/adidas.jpg" },
+      { id: 3, name: "Puma RS-X", brand: "Puma", price: 3999, img: "img/puma.jpg" },
+      { id: 4, name: "Anta KT7", brand: "Anta", price: 3499, img: "img/anta.jpg" },
+      { id: 5, name: "Vans Old Skool", brand: "Vans", price: 2999, img: "img/vans.jpg" }
+    ];
+
+    const list = document.getElementById('product-list');
+
+    // Render products
+    products.forEach(p => {
+      const div = document.createElement('div');
+      div.className = "product";
+      div.innerHTML = `
+        <div class="img" style="background-image:url('${p.img}')"></div>
+        <h3>${p.name}</h3>
+        <div class="brand">${p.brand}</div>
+        <div class="price">₱${p.price}</div>
+        <button onclick="addToCart(${p.id})">Add to Cart</button>
+      `;
+      list.appendChild(div);
+    });
+
+    // Add to cart
+    window.addToCart = function(id) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const product = products.find(p => p.id === id);
+      cart.push(product);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      alert(`${product.name} added to cart!`);
+    }
+
+    // Update navbar cart count
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartLink = document.querySelector('.nav-links a[href="cart.html"]');
+      if (cartLink) {
+        cartLink.textContent = `Cart (${cart.length})`;
+      }
+    }
+
+    window.onload = updateCartCount;
+  </script>
+</body>
+</html>

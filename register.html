@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Register — ShoeAway</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-left"><a class="logo" href="index.html">ShoeAway</a></div>
+    <div class="nav-right">
+      <a href="shop.html">Shop</a>
+      <a href="cart.html">Cart (<span id="nav-cart-count">0</span>)</a>
+      <a href="orders.html">My Orders</a>
+      <a id="nav-account" href="login.html">Account</a>
+    </div>
+  </nav>
+  <main class="auth-container">
+    <div class="auth-card">
+      <h2>Create Account</h2>
+      <form id="register-form">
+        <input type="text" id="reg-username" placeholder="Username" required>
+        <input type="password" id="reg-password" placeholder="Password" required>
+        <button type="submit">Register</button>
+      </form>
+      <p>Already have an account? <a href="login.html">Login</a></p>
+      <div id="reg-msg"></div>
+    </div>
+  </main>
+  <script>
+    document.getElementById('register-form').onsubmit = function(e) {
+      e.preventDefault();
+      const username = document.getElementById('reg-username').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const msg = document.getElementById('reg-msg');
+      if (!username || !password) {
+        msg.textContent = "Please fill all fields.";
+        return;
+      }
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      if (users.find(u => u.username === username)) {
+        msg.textContent = "Username already exists.";
+        return;
+      }
+      users.push({ username, password });
+      localStorage.setItem('users', JSON.stringify(users));
+      msg.textContent = "Account created! You can now login.";
+      setTimeout(() => window.location = "login.html", 1200);
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
