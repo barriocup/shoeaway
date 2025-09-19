@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Account — ShoeAway</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav">
+<nav class="navbar">
+ <div class="nav-left"><a class="logo" href="index.html">ShoeAway</a></div>
+  <div class="nav-links">
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart</a>
+    <a href="orders.html">My Orders</a>
+    <a href="account.html">Account</a>
+  </div>
+</nav>
+  <main class="container">
+    <h2>Account</h2>
+    <div id="account-info"></div>
+    <button id="logout-btn">Logout</button>
+  </main>
+  <script>
+    function renderAccount() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const info = document.getElementById('account-info');
+      if (!user) {
+        info.innerHTML = "<p>Please login.</p>";
+        document.getElementById('logout-btn').style.display = "none";
+        return;
+      }
+      info.innerHTML = `<p>Username: <b>${user.username}</b></p>`;
+      document.getElementById('logout-btn').style.display = "inline-block";
+    }
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('user');
+      alert("Logged out!");
+      window.location = "login.html";
+    }
+    renderAccount();
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
